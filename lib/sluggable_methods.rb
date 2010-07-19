@@ -15,8 +15,6 @@ module VentureHacks
 					write_inheritable_attribute :slug_source, slug_source.to_sym
 				end
 				class_inheritable_reader :slug_source
-				puts "slug_source class => #{slug_source.class.name}"
-#				puts "@slug_source => #{@slug_source}"
 
 				has_one :slug, {:as => :sluggable, :dependent => :destroy}.merge(options)
 				include VentureHacks::SlugBug::InstanceMethods
@@ -38,11 +36,8 @@ module VentureHacks
 		# This module contains instance methods
 		module InstanceMethods
 			def create_slug_before_create
-					puts "slug_source => #{slug_source}"
-					puts "slug_source => #{slug_source.class.name}"
 					if slug_source && respond_to?(slug_source)
 						url_slug = send(slug_source).parameterize
-						puts "url_slug => #{url_slug}"
 
 						idx = 0
 						done_creating_slug = false
