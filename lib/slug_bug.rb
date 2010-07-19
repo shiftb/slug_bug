@@ -1,0 +1,1 @@
+require 'sluggable_methods'

@@ -1,0 +1,63 @@
+require 'activerecord'
+
+module VentureHacks
+	module SlugBug
+		def self.included(base)
+			base.extend ClassMethods
+		end
+
+		module ClassMethods
+			def slug_bug(slug_source = :title, options = {})
+				if slug_source.is_a? Hash
+					write_inheritable_attribute :slug_source, :title
+					options = slug_source
+				else
+					write_inheritable_attribute :slug_source, slug_source.to_sym
+				end
+				class_inheritable_reader :slug_source
+				puts "slug_source class => #{slug_source.class.name}"
+#				puts "@slug_source => #{@slug_source}"
+
+				has_one :slug, {:as => :sluggable, :dependent => :destroy}.merge(options)
+				include VentureHacks::SlugBug::InstanceMethods
+				extend VentureHacks::SlugBug::SingletonMethods
+
+				before_create :create_slug_before_create
+			end
+		end
+
+		# This module contains class methods
+		module SingletonMethods
+			# Helper class method to lookup object from slug
+			def find_by_slug(slug)
+				slug = Slug.find_by_name(slug)
+				slug.sluggable
+			end
+		end
+
+		# This module contains instance methods
+		module InstanceMethods
+			def create_slug_before_create
+					puts "slug_source => #{slug_source}"
+					puts "slug_source => #{slug_source.class.name}"
+					if slug_source && respond_to?(slug_source)
+						url_slug = send(slug_source).parameterize
+						puts "url_slug => #{url_slug}"
+
+						idx = 0
+						done_creating_slug = false
+						begin
+							slug_name = "#{url_slug}#{idx > 0 ? '-'+idx : ''}"
+							unless Slug.exists?(:name => slug_name)
+								build_slug :name => slug_name
+								done_creating_slug = true
+							end
+							idx = idx + 1
+						end while !done_creating_slug
+					end
+			end
+		end
+	end
+end
+
+ActiveRecord::Base.send(:include, VentureHacks::SlugBug)

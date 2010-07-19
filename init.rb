@@ -1,0 +1,1 @@
+require 'slug_bug'
