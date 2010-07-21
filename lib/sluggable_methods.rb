@@ -54,7 +54,7 @@ module VentureHacks
 
 			def slug_url(only_path=false)
 				domain = VentureHacks::SlugBugConfig.domain
-				url = "#{domain && !only_path ? domain : ''}/#{slug.name}"
+				"#{domain && !only_path ? domain : ''}/#{slug.name}"
 			end
 		end
 	end
