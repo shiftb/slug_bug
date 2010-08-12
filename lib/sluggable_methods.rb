@@ -21,7 +21,7 @@ module VentureHacks
 				extend VentureHacks::SlugBug::SingletonMethods
 
 				before_create :create_slug_before_create
-#				after_save :update_slug
+				after_save :update_slug
 			end
 		end
 
@@ -54,7 +54,7 @@ module VentureHacks
 			end
 
 			def update_slug
-				if slug_source && respond_to?(slug_source)
+				if slug && slug_source && respond_to?(slug_source)
 					url_slug = send(slug_source).parameterize
 
 					idx = 0
