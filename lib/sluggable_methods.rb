@@ -21,7 +21,7 @@ module VentureHacks
 				extend VentureHacks::SlugBug::SingletonMethods
 
 				before_create :create_slug_before_create
-				after_save :update_slug
+#				after_save :update_slug
 			end
 		end
 
