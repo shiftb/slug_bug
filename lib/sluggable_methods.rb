@@ -56,6 +56,8 @@ module VentureHacks
 			def update_slug
 				if slug && slug_source && respond_to?(slug_source)
 					url_slug = send(slug_source).parameterize
+					# return if the name is already the best possible slug
+					return if slug.name == url_slug
 
 					idx = 0
 					done_updating_slug = false
