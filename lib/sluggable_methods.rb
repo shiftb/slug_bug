@@ -38,7 +38,7 @@ module VentureHacks
 		module InstanceMethods
 			def create_slug_before_create
 				if slug_source && respond_to?(slug_source)
-					url_slug = send(slug_source).parameterize
+					url_slug = silence_warnings { send(slug_source).parameterize }
 
 					idx = 0
 					done_creating_slug = false
@@ -55,7 +55,7 @@ module VentureHacks
 
 			def update_slug
 				if slug && slug_source && respond_to?(slug_source)
-					url_slug = send(slug_source).parameterize
+					url_slug = silence_warnings { send(slug_source).parameterize }
 					# return if the name is already the best possible slug
 					return if slug.name == url_slug
 
